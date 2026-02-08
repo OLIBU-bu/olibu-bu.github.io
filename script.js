@@ -1,38 +1,56 @@
-// 🔹 AQUÍ VAN LOS PRODUCTOS (por ahora vacío)
-const productos = [
-  // Cuando tengas productos, aquí los agregas
-];
-
-// 🔹 Carrito
-let carrito = [];
-
-// 🔹 Obtener precio según cantidad (mayorista)
-function obtenerPrecioUnitario(producto, cantidad) {
+function obtenerPrecio(producto, cantidad = 1) {
   let precio = producto.precios[0].precio;
 
   producto.precios.forEach(p => {
-    if (cantidad >= p.min) {
-      precio = p.precio;
-    }
+    if (cantidad >= p.min) precio = p.precio;
   });
 
   return precio;
 }
 
-// 🔹 Agregar producto
-function agregarAlCarrito(id) {
-  const item = carrito.find(p => p.id === id);
+function renderProductos() {
+  const contenedor = document.getElementById("lista-productos");
+  contenedor.innerHTML = "";
+
+  productos.forEach(p => {
+    const precioBase = obtenerPrecio(p, 1);
+
+    contenedor.innerHTML += `
+  <div class="card">
+    <img src="${p.imagen}" alt="${p.nombre}" class="producto-img">
+
+    <h3>${p.nombre}</h3>
+    <p>S/ ${precioBase}</p>
+
+    <button onclick="agregarCarrito(${p.id})">
+      Agregar al carrito
+    </button>
+  </div>
+`;
+
+  });
+}
+
+
+let carrito = [];
+
+function agregarCarrito(id) {
+  const producto = productos.find(p => p.id === id);
+  const item = carrito.find(i => i.id === id);
 
   if (item) {
     item.cantidad++;
   } else {
-    carrito.push({ id, cantidad: 1 });
+    carrito.push({
+      id,
+      nombre: producto.nombre,
+      cantidad: 1
+    });
   }
 
-  renderCarrito();
+  actualizarCarrito();
 }
 
-// 🔹 Cambiar cantidad
 function cambiarCantidad(id, cambio) {
   const item = carrito.find(p => p.id === id);
   if (!item) return;
@@ -43,60 +61,44 @@ function cambiarCantidad(id, cambio) {
     carrito = carrito.filter(p => p.id !== id);
   }
 
-  renderCarrito();
+  actualizarCarrito();
 }
-
-// 🔹 Eliminar producto
 function eliminarProducto(id) {
   carrito = carrito.filter(p => p.id !== id);
-  renderCarrito();
+  actualizarCarrito();
 }
 
-// 🔹 Mostrar productos
-function renderProductos() {
-  const contenedor = document.getElementById("productos");
-  contenedor.innerHTML = "";
 
-  if (productos.length === 0) {
-    contenedor.innerHTML = "<p>Aún no hay productos cargados.</p>";
-    return;
-  }
 
-  productos.forEach(p => {
-    contenedor.innerHTML += `
-      <div class="producto">
-        <h3>${p.nombre}</h3>
-        <p>Precio desde S/ ${p.precios[p.precios.length - 1].precio}</p>
-        <button onclick="agregarAlCarrito(${p.id})">Agregar</button>
-      </div>
-    `;
-  });
-}
 
-// 🔹 Mostrar carrito
-function renderCarrito() {
-  const contenedor = document.getElementById("carrito");
-  contenedor.innerHTML = "";
+
+
+
+
+function actualizarCarrito() {
+  const carritoDiv = document.getElementById("carrito");
+  carritoDiv.innerHTML = "";
+
   let total = 0;
 
   carrito.forEach(item => {
     const producto = productos.find(p => p.id === item.id);
-    const precioUnitario = obtenerPrecioUnitario(producto, item.cantidad);
+    const precioUnitario = obtenerPrecio(producto, item.cantidad);
     const subtotal = precioUnitario * item.cantidad;
+
     total += subtotal;
 
-    contenedor.innerHTML += `
+    carritoDiv.innerHTML += `
       <div class="item-carrito">
         <strong>${producto.nombre}</strong><br>
         Precio unitario: S/ ${precioUnitario}<br>
 
-        <div class="cantidad">
-          <button onclick="cambiarCantidad(${item.id}, -1)">−</button>
-          ${item.cantidad}
-          <button onclick="cambiarCantidad(${item.id}, 1)">+</button>
-        </div>
+        <button onclick="cambiarCantidad(${item.id}, -1)">−</button>
+        ${item.cantidad}
+        <button onclick="cambiarCantidad(${item.id}, 1)">+</button>
 
-        Subtotal: S/ ${subtotal.toFixed(2)}<br>
+        <br>Subtotal: S/ ${subtotal.toFixed(2)}<br>
+
         <button onclick="eliminarProducto(${item.id})">Eliminar</button>
       </div>
     `;
@@ -105,5 +107,23 @@ function renderCarrito() {
   document.getElementById("total").innerText = total.toFixed(2);
 }
 
-// 🔹 Iniciar
+
+
+function comprarWhatsApp() {
+  if (carrito.length === 0) {
+    alert("El carrito está vacío");
+    return;
+  }
+
+  let mensaje = "Hola, quiero hacer el siguiente pedido:%0A";
+
+  carrito.forEach(item => {
+    mensaje += `- ${item.nombre} x${item.cantidad} (S/ ${(item.precio * item.cantidad).toFixed(2)})%0A`;
+  });
+
+  const total = carrito.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
+  mensaje += `%0ATotal: S/ ${total.toFixed(2)}`;
+
+  window.open(`https://wa.me/51975455690?text=${mensaje}`, "_blank");
+}
 renderProductos();
