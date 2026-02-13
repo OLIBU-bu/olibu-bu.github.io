@@ -367,6 +367,19 @@ footer {
   }
 
 }
+section {
+  padding: 60px 20px;
+}
+
+h2 {
+  margin-bottom: 30px;
+}
+.container {
+  max-width: 1200px;
+  margin: auto;
+}
+
+
 
 
 
