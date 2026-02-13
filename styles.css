@@ -10,7 +10,7 @@ h1, h2 {
 
 a {
   text-decoration: none;
-  color: #6b8e23;
+  color: #253602;
 }
 
 .section {
@@ -26,7 +26,7 @@ a {
 .hero {
   height: 100vh;
   background: linear-gradient(rgba(0,0,0,.4), rgba(0,0,0,.4)),
-  url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1gQAmw6-QOCySUqqdUkyRG7ZurRMS8c8pjA&s");
+  url("img/fondo.png");
   background-size: cover;
   color: white;
 }
@@ -63,21 +63,77 @@ a {
 .hero button:hover {
   background: #9c843c;
 }
+.hero-text {
+  max-width: 500px;
+  margin-left: 80px;
+  margin-top: 120px;
+  color: white;
+  
+}
+
+.hero-text h1 {
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 15px;
+}
+
+.hero-text h1 span {
+  color: #c6a74b;
+  text-shadow: 
+    1px 1px 2px rgba(0,0,0,0.6),
+    -1px -1px 2px rgba(0,0,0,0.6);
+}
+
+
+.hero-text p {
+  font-size: 18px;
+  margin-bottom: 30px;
+  opacity: 0.9;
+}
+
+.btn-whatsapp {
+  display: inline-block;
+  background: #c6a74b;
+  color: white;
+  padding: 14px 28px;
+  font-size: 16px;
+  border-radius: 40px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.btn-whatsapp:hover {
+  background: #a68b3a;
+  transform: translateY(-3px);
+}
 
 /* CARDS */
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 30px;
-  margin-top: 40px;
+.card {
+  width: 240px;              /* ancho fijo */
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  background: white;
+  transition: 0.3s ease;
 }
 
-.card {
-  background: white;
-  padding: 25px;
-  border-radius: 10px;
-  box-shadow: 0 10px 25px rgba(0,0,0,.1);
+.card:hover {
+  transform: translateY(-5px);
 }
+
+.producto-img {
+  width: 100%;
+  height: 160px;             /* controla altura de imagen */
+  object-fit: contain;
+}
+#lista-productos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  justify-content: center;
+}
+
 
 /* BENEFICIOS */
 .beneficios {
@@ -90,8 +146,8 @@ a {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background: #25d366;
-  color: white;
+  background: #013213;
+  color: rgb(106, 83, 7);
   font-size: 30px;
   padding: 15px;
   border-radius: 50%;
@@ -121,62 +177,91 @@ footer {
 
 /* CARRITO */
 .carrito {
+  display: none;
   position: fixed;
   top: 100px;
-  right: 20px;
-  background: white;
-  width: 260px;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 10px 25px rgba(0,0,0,.2);
-  z-index: 1000;
-}
-
-.carrito ul {
-  list-style: none;
-  padding: 0;
-  max-height: 200px;
+  right: 40px;
+  width: 320px;
+  max-height: 70vh;
   overflow-y: auto;
-}
-
-.carrito li {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
   font-size: 14px;
-  margin-bottom: 8px;
 }
 
-.carrito button {
-  width: 100%;
-  padding: 10px;
-  background: #b59b4c;
-  border: none;
+.item-carrito {
+  border-bottom: 1px solid #787000;
+  padding: 12px 0;
+}
+
+.item-carrito strong {
+  font-size: 14px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.item-carrito button {
+  background: #1f3d2b;
   color: white;
-  cursor: pointer;
-}
-
-.cantidad-controles {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  margin-top: 5px;
-}
-
-.cantidad-controles button {
+  border: none;
   padding: 4px 8px;
-  border: none;
-  background: #6b8e23;
-  color: white;
-  cursor: pointer;
-  border-radius: 4px;
   font-size: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 2px;
+  transition: 0.2s ease;
 }
 
-.cantidad-controles button.eliminar {
+.item-carrito button:hover {
+  background: #c6a74b;
+  color: black;
+}
+
+.item-carrito button:last-child {
   background: #c0392b;
 }
 
-.producto-img {
-  width: 100%;
-  height: 180px;
-  object-fit: contain;
-  margin-bottom: 10px;
+.item-carrito button:last-child:hover {
+  background: #e74c3c;
+}
+
+
+.filtros {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 40px auto;
+  max-width: 1100px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.categorias {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.categorias button {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: none;
+  background: #eee;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 14px;
+}
+
+.categorias button.activa {
+  background: #1f3d2b;
+  color: white;
+}
+
+#buscador {
+  padding: 10px 15px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  width: 250px;
 }
