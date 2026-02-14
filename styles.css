@@ -1,26 +1,18 @@
 /* =====================================================
-   OLIBU NATURAL - CSS PROFESIONAL REESTRUCTURADO
+   OLIBU NATURAL - DISEÑO PROFESIONAL COMPLETO
    ===================================================== */
 
-
-/* ==========================
-   1️⃣ VARIABLES GLOBALES
-   ========================== */
+/* ===== VARIABLES ===== */
 :root {
-  --verde-principal: #2e4d3c;
-  --verde-secundario: #3f6b54;
-  --verde-claro: #6d8f7a;
+  --verde: #2e4d3c;
+  --verde-claro: #3f6b54;
   --beige: #f4f1ea;
   --blanco: #ffffff;
   --gris: #666;
-  --sombra-suave: 0 6px 18px rgba(0,0,0,0.08);
-  --sombra-media: 0 8px 25px rgba(0,0,0,0.15);
+  --sombra: 0 8px 25px rgba(0,0,0,0.1);
 }
 
-
-/* ==========================
-   2️⃣ RESET Y BASE
-   ========================== */
+/* ===== RESET ===== */
 * {
   margin: 0;
   padding: 0;
@@ -31,15 +23,11 @@ body {
   font-family: 'Poppins', sans-serif;
   background: var(--beige);
   color: #333;
-  line-height: 1.6;
 }
 
-
-/* ==========================
-   3️⃣ NAVBAR
-   ========================== */
+/* ===== NAVBAR ===== */
 .navbar {
-  background: var(--verde-principal);
+  background: var(--verde);
   color: white;
   padding: 15px 40px;
   display: flex;
@@ -56,38 +44,38 @@ body {
 .navbar a {
   color: white;
   text-decoration: none;
-  font-weight: 500;
 }
 
-.navbar a:hover {
-  opacity: 0.8;
-}
-
-
-/* ==========================
-   4️⃣ HERO
-   ========================== */
+/* ===== HERO ===== */
 .hero {
-  background: url("img/fondo.jpg") center/cover no-repeat;
+  position: relative;
   height: 90vh;
+  background: url("img/fondo.jpg") center/cover no-repeat;
   display: flex;
   align-items: center;
-  padding-left: 60px;
+  justify-content: center;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+}
+
+.hero-content {
+  position: relative;
+  text-align: center;
   color: white;
 }
 
-.hero-text h1 {
-  font-size: 48px;
-}
-
-.hero-text span {
-  color: #d8f3dc;
+.hero-content h1 {
+  font-size: 45px;
 }
 
 .btn-hero {
   display: inline-block;
   margin-top: 20px;
-  padding: 12px 25px;
+  padding: 14px 30px;
   background: #25D366;
   color: white;
   border-radius: 30px;
@@ -98,13 +86,10 @@ body {
 
 .btn-hero:hover {
   transform: translateY(-3px);
-  box-shadow: var(--sombra-media);
+  box-shadow: var(--sombra);
 }
 
-
-/* ==========================
-   5️⃣ SECCIONES GENERALES
-   ========================== */
+/* ===== SECCIONES ===== */
 .section {
   padding: 60px 20px;
 }
@@ -114,14 +99,12 @@ body {
   margin: auto;
 }
 
-.light {
-  background: white;
+.titulo-seccion {
+  text-align: center;
+  margin-bottom: 30px;
 }
 
-
-/* ==========================
-   6️⃣ FILTROS (CATEGORÍAS + BUSCADOR)
-   ========================== */
+/* ===== FILTROS ===== */
 .filtros {
   display: flex;
   justify-content: space-between;
@@ -130,7 +113,6 @@ body {
   margin-bottom: 30px;
 }
 
-/* ---- Categorías ---- */
 .categorias {
   display: flex;
   flex-wrap: wrap;
@@ -140,26 +122,20 @@ body {
 .categorias button {
   padding: 10px 20px;
   border-radius: 30px;
-  border: 1px solid var(--verde-principal);
+  border: 1px solid var(--verde);
   background: white;
-  color: var(--verde-principal);
-  font-weight: 500;
+  color: var(--verde);
   cursor: pointer;
   transition: 0.3s;
 }
 
-.categorias button:hover {
-  background: var(--verde-principal);
-  color: white;
-}
-
+.categorias button:hover,
 .categorias button.activa {
-  background: var(--verde-principal);
+  background: var(--verde);
   color: white;
 }
 
-
-/* ---- Buscador Profesional ---- */
+/* ===== BUSCADOR ===== */
 .buscador-container {
   position: relative;
 }
@@ -169,13 +145,6 @@ body {
   border-radius: 30px;
   border: 1px solid #ddd;
   width: 280px;
-  font-size: 14px;
-  box-shadow: var(--sombra-suave);
-  outline: none;
-}
-
-.buscador:focus {
-  border-color: var(--verde-principal);
 }
 
 .buscador-container::before {
@@ -184,54 +153,31 @@ body {
   left: 15px;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--gris);
 }
 
-
-/* ==========================
-   7️⃣ PRODUCTOS (CARDS)
-   ========================== */
+/* ===== PRODUCTOS ===== */
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
   gap: 25px;
 }
 
 .card {
   background: white;
-  border-radius: 18px;
   padding: 20px;
+  border-radius: 18px;
+  box-shadow: var(--sombra);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  min-height: 360px;
-  box-shadow: var(--sombra-suave);
-  transition: 0.3s;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--sombra-media);
+  min-height: 380px;
 }
 
 .producto-img {
   height: 160px;
   object-fit: contain;
-  margin-bottom: 15px;
 }
 
-.card h3 {
-  font-size: 16px;
-  margin-bottom: 8px;
-}
-
-.card p {
-  font-size: 14px;
-  margin-bottom: 15px;
-}
-
-
-/* ---- Botón Agregar ---- */
 .card button {
   margin-top: auto;
   padding: 12px;
@@ -246,13 +192,10 @@ body {
 
 .card button:hover {
   transform: translateY(-3px);
-  box-shadow: var(--sombra-media);
+  box-shadow: var(--sombra);
 }
 
-
-/* ==========================
-   8️⃣ CARRITO LATERAL
-   ========================== */
+/* ===== CARRITO ===== */
 .carrito {
   position: fixed;
   right: -400px;
@@ -271,98 +214,80 @@ body {
   right: 0;
 }
 
-.cerrar-carrito {
-  background: none;
-  border: none;
-  font-size: 22px;
-  float: right;
-  cursor: pointer;
-}
-
-.total-carrito {
-  font-size: 18px;
-  font-weight: bold;
-  margin-top: 15px;
-}
-
-
-/* ---- Botón Comprar WhatsApp ---- */
 .btn-comprar {
   width: 100%;
   padding: 14px;
   border-radius: 30px;
   background: #25D366;
   color: white;
-  font-weight: 600;
   border: none;
   margin-top: 20px;
   cursor: pointer;
-  transition: 0.3s;
 }
 
-.btn-comprar:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--sombra-media);
-}
-
-
-/* ==========================
-   9️⃣ BOTONES FLOTANTES
-   ========================== */
-.whatsapp {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  background: #25D366;
-  color: white;
-  padding: 15px;
-  border-radius: 50%;
-  font-size: 20px;
-  text-decoration: none;
-  box-shadow: var(--sombra-media);
-}
-
+/* ===== BOTONES FLOTANTES ===== */
+.whatsapp,
 .btn-carrito-flotante {
   position: fixed;
   bottom: 20px;
-  right: 20px;
-  background: var(--verde-principal);
-  color: white;
   padding: 15px;
   border-radius: 50%;
+  color: white;
   text-decoration: none;
-  box-shadow: var(--sombra-media);
+  box-shadow: var(--sombra);
 }
 
+.whatsapp {
+  left: 20px;
+  background: #25D366;
+}
 
-/* ==========================
-   🔟 FOOTER
-   ========================== */
+.btn-carrito-flotante {
+  right: 20px;
+  background: var(--verde);
+}
+
+/* ===== FOOTER ===== */
 footer {
   text-align: center;
   padding: 20px;
-  background: var(--verde-principal);
+  background: var(--verde);
   color: white;
-  margin-top: 50px;
+  margin-top: 40px;
 }
 
-
-/* ==========================
-   1️⃣1️⃣ RESPONSIVE
-   ========================== */
+/* ================= RESPONSIVE PERFECTO ================= */
 @media (max-width: 768px) {
+
+  .navbar {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .navbar ul {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .hero {
+    height: 60vh;
+  }
+
+  .hero-content h1 {
+    font-size: 26px;
+  }
+
   .filtros {
     flex-direction: column;
     gap: 20px;
   }
 
-  .hero {
-    height: 60vh;
-    padding-left: 20px;
+  .buscador {
+    width: 100%;
   }
 
-  .hero-text h1 {
-    font-size: 32px;
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .carrito {
