@@ -272,6 +272,41 @@ window.addEventListener("scroll", function() {
     navbar.classList.remove("scrolled");
   }
 });
+// BOTÓN CARRITO FLOTANTE
+function toggleCarrito() {
+  const carritoEl = document.getElementById('carrito');
+  carritoEl.classList.toggle('activo');
+}
+
+// Actualizar contador y visibilidad
+function actualizarContadorCarrito() {
+  const btn = document.getElementById('btn-carrito-flotante');
+  const contador = document.getElementById('contador-carrito');
+  const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+  
+  contador.textContent = totalItems;
+  
+  if (totalItems === 0) {
+    btn.classList.add('vacio');
+  } else {
+    btn.classList.remove('vacio');
+  }
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', function() {
+  document.getElementById('btn-carrito-flotante').addEventListener('click', function(e) {
+    e.preventDefault();
+    toggleCarrito();
+  });
+  
+  // Llamar al actualizar carrito existente
+  const oldActualizarCarrito = actualizarCarrito;
+  actualizarCarrito = function() {
+    oldActualizarCarrito(); // Llama al original
+    actualizarContadorCarrito(); // Nuevo
+  };
+});
 
 /* =========================================
    INICIALIZACIÓN
@@ -279,3 +314,4 @@ window.addEventListener("scroll", function() {
 
 generarCategorias();
 renderProductos();
+
