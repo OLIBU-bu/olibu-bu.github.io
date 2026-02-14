@@ -1,7 +1,4 @@
-/* =========================================
-   VARIABLES DE COLOR
-========================================= */
-
+/* VARIABLES DE COLOR */
 :root {
   --verde-principal: #2e4d3c;
   --verde-secundario: #3f6b54;
@@ -11,10 +8,7 @@
   --gris: #666;
 }
 
-/* =========================================
-   RESET GENERAL
-========================================= */
-
+/* RESET GENERAL */
 * {
   margin: 0;
   padding: 0;
@@ -27,10 +21,7 @@ body {
   color: #333;
 }
 
-/* =========================================
-   CONTENEDOR GENERAL
-========================================= */
-
+/* CONTENEDOR GENERAL */
 .container {
   max-width: 1200px;
   margin: auto;
@@ -45,131 +36,23 @@ body {
   background: #fafafa;
 }
 
-/* =========================================
-   HERO
-========================================= */
-
-/* =========================================
-   HERO CON IMAGEN Y ESPACIO PARA NAVBAR
-========================================= */
-
+/* HERO - HERO CON IMAGEN Y ESPACIO PARA NAVBAR */
 .hero {
   position: relative;
-  background: url("img/hero.jpg") center/cover no-repeat;
+  background: url('img/hero.jpg') center/cover no-repeat;
   color: white;
-  padding: 160px 20px 100px 20px; /* espacio para navbar fija */
+  padding: 160px 20px 100px; /* espacio para navbar fija */
   z-index: 1;
 }
 
 /* Capa oscura para mejor lectura */
 .hero::before {
-  content: "";
+  content: '';
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.55);
   z-index: -1;
 }
-
-.hero {
-  position: relative;
-  background: url("img/fondo.png") center/cover no-repeat;
-  color: white;
-  padding: 100px 20px;
-  z-index: 1;
-}
-
-/* Capa oscura elegante encima */
-.hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.55);
-  z-index: -1;
-}
-
-
-/* =========================================
-   NAVBAR FIJA PROFESIONAL
-========================================= */
-
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  padding: 18px 60px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 1000;
-
-  background: transparent;
-  transition: all 0.4s ease;
-}
-
-/* Estado cuando haces scroll */
-.navbar.scrolled {
-  background: rgba(46, 77, 60, 0.95);
-  backdrop-filter: blur(8px);
-  padding: 12px 60px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-}
-
-/* Logo */
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: 'Playfair Display', serif;
-  font-size: 26px;
-  color: white;
-}
-
-.logo-img {
-  width: 38px;
-  height: 38px;
-  object-fit: contain;
-}
-
-/* Menú */
-
-.navbar ul {
-  list-style: none;
-  display: flex;
-  gap: 30px;
-}
-
-.navbar a {
-  text-decoration: none;
-  color: white;
-  font-weight: 500;
-  position: relative;
-  transition: 0.3s;
-}
-
-/* Línea animada debajo */
-.navbar a::after {
-  content: "";
-  position: absolute;
-  width: 0%;
-  height: 2px;
-  left: 0;
-  bottom: -6px;
-  background: #ffffff;
-  transition: width 0.3s ease;
-}
-
-.navbar a:hover::after {
-  width: 100%;
-}
-
-.navbar a:hover {
-  opacity: 0.8;
-}
-
-
-/* Hero text */
 
 .hero-text {
   text-align: center;
@@ -191,7 +74,6 @@ body {
 }
 
 /* Botón WhatsApp hero */
-
 .btn-whatsapp {
   background: white;
   color: var(--verde-principal);
@@ -200,6 +82,7 @@ body {
   text-decoration: none;
   font-weight: 600;
   transition: 0.3s;
+  display: inline-block;
 }
 
 .btn-whatsapp:hover {
@@ -207,10 +90,81 @@ body {
   box-shadow: 0 8px 18px rgba(0,0,0,0.2);
 }
 
-/* =========================================
-   FILTROS
-========================================= */
+/* NAVBAR FIJA PROFESIONAL */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 18px 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+  background: transparent;
+  transition: all 0.4s ease;
+}
 
+/* Estado cuando haces scroll */
+.navbar.scrolled {
+  background: rgba(46, 77, 60, 0.95);
+  backdrop-filter: blur(8px);
+  padding: 12px 60px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  color: white;
+}
+
+.logo-img {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+}
+
+/* Menú */
+.navbar ul {
+  list-style: none;
+  display: flex;
+  gap: 30px;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+  position: relative;
+  transition: 0.3s;
+}
+
+/* Línea animada debajo */
+.navbar a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  left: 0;
+  bottom: -6px;
+  background: #ffffff;
+  transition: width 0.3s ease;
+}
+
+.navbar a:hover::after {
+  width: 100%;
+}
+
+.navbar a:hover {
+  opacity: 0.8;
+}
+
+/* FILTROS */
 .filtros {
   display: flex;
   flex-wrap: wrap;
@@ -240,17 +194,15 @@ body {
   background: var(--verde-principal);
 }
 
-#buscador {
+/* Buscador */
+.buscador {
   padding: 8px 12px;
   border-radius: 20px;
   border: 1px solid #ccc;
   min-width: 200px;
 }
 
-/* =========================================
-   PRODUCTOS
-========================================= */
-
+/* PRODUCTOS */
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -289,10 +241,7 @@ body {
   margin-bottom: 8px;
 }
 
-/* =========================================
-   BOTONES PROFESIONALES
-========================================= */
-
+/* BOTONES PROFESIONALES */
 button {
   cursor: pointer;
   border: none;
@@ -302,7 +251,6 @@ button {
 }
 
 /* Botón Agregar */
-
 .card button {
   background: linear-gradient(135deg, #2e7d32, #1b5e20);
   color: white;
@@ -320,8 +268,7 @@ button {
   transform: scale(0.95);
 }
 
-/* Botones carrito (+ -) */
-
+/* Botones carrito */
 .item-carrito button {
   background: #f1f1f1;
   padding: 4px 8px;
@@ -334,7 +281,6 @@ button {
 }
 
 /* Botón eliminar */
-
 .item-carrito button:last-child {
   background: #c62828;
   color: white;
@@ -348,16 +294,13 @@ button {
   transform: translateY(-2px);
 }
 
-/* =========================================
-   CARRITO
-========================================= */
-
+/* CARRITO */
 .carrito {
   position: fixed;
   top: 0;
   right: -400px;
   width: 350px;
-  height: 100%;
+  height: 100vh;
   background: white;
   padding: 20px;
   overflow-y: auto;
@@ -390,10 +333,7 @@ button {
   padding-bottom: 10px;
 }
 
-/* =========================================
-   WHATSAPP FLOTANTE
-========================================= */
-
+/* WHATSAPP FLOTANTE */
 .whatsapp {
   position: fixed;
   bottom: 20px;
@@ -412,10 +352,47 @@ button {
   transform: scale(1.1);
 }
 
-/* =========================================
-   FOOTER
-========================================= */
+/* BOTÓN CARRITO FLOTANTE */
+.btn-carrito-flotante {
+  position: fixed;
+  bottom: 90px; /* Encima del WhatsApp */
+  right: 20px;
+  background: var(--verde-principal);
+  color: white;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  text-decoration: none;
+  z-index: 999;
+  transition: 0.3s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
 
+.btn-carrito-flotante:hover {
+  transform: scale(1.1);
+}
+
+#contador-carrito {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ff4444;
+  color: white;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  font-size: 12px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* FOOTER */
 footer {
   text-align: center;
   padding: 20px;
@@ -423,26 +400,19 @@ footer {
   color: white;
 }
 
-/* =========================================
-   RESPONSIVE
-========================================= */
-
+/* RESPONSIVE */
 @media (max-width: 768px) {
-
   .navbar {
     flex-direction: column;
     gap: 15px;
   }
-
   .navbar ul {
     flex-wrap: wrap;
     justify-content: center;
   }
-
   .hero-text h1 {
     font-size: 28px;
   }
-
   .carrito {
     width: 100%;
   }
@@ -453,33 +423,29 @@ footer {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
 }
-/* =========================================
-   SECCIONES CENTRADAS Y ORDENADAS
-========================================= */
 
-#historia,
-#beneficios,
-#contacto {
+/* SECCIONES CENTRADAS Y ORDENADAS */
+#nosotros, #beneficios, #contacto {
   text-align: center;
   max-width: 750px;
   margin: 0 auto;
 }
 
 /* Texto historia más elegante */
-#historia p {
+#nosotros p {
   text-align: center;
   line-height: 1.6;
   margin-top: 10px;
 }
 
 /* Beneficios centrados correctamente */
-#beneficios ul {
+.beneficios {
   list-style: none;
   padding: 0;
   margin-top: 15px;
 }
 
-#beneficios li {
+.beneficios li {
   margin-bottom: 10px;
   text-align: center;
 }
@@ -493,10 +459,8 @@ footer {
   display: inline-block;
   margin: 6px 8px;
 }
-/* =========================================
-   NUESTRA HISTORIA - DISEÑO
-========================================= */
 
+/* NUESTRA HISTORIA - DISEÑO */
 #nosotros {
   background: linear-gradient(135deg, #f3efe6, #e8e1d4);
   padding: 100px 0;
@@ -513,7 +477,6 @@ footer {
   gap: 60px;
   align-items: center;
   position: relative;
-
   opacity: 0;
   transform: translateY(60px);
   animation: aparecerNosotros 1.2s ease forwards;
@@ -536,7 +499,7 @@ footer {
 
 /* Fondo decorativo suave */
 #nosotros::before {
-  content: "";
+  content: '';
   position: absolute;
   width: 400px;
   height: 400px;
@@ -560,39 +523,31 @@ footer {
     grid-template-columns: 1fr;
     text-align: center;
   }
-
   #nosotros h2::after {
     margin: 15px auto 0 auto;
   }
 }
-/* =========================================
-   FIX RESPONSIVE VERTICAL (MÓVIL)
-========================================= */
 
+/* FIX RESPONSIVE VERTICAL MÓVIL */
 @media (max-width: 768px) {
-
   .hero {
-    padding: 120px 20px 60px 20px;
+    padding: 120px 20px 60px;
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
   }
-
   .hero-text h1 {
     font-size: 26px;
     line-height: 1.2;
   }
-
   .hero-text p {
     font-size: 15px;
   }
-
 }
 
-/* Mobile portrait específico (<480px ancho, > altura) */
-@media (max-width: 480px) and (orientation: portrait) {
+@media (max-width: 480px) {
   .container { padding: 0 10px; max-width: 100%; }
   .navbar { padding: 10px 15px; }
   .navbar ul { gap: 10px; font-size: 14px; }
@@ -610,67 +565,13 @@ footer {
   .card h3 { 
     font-size: 14px; 
     line-height: 1.3; 
-    white-space: normal; /* Evita desborde de nombres largos */
+    white-space: normal;
   }
   .card p { font-size: 16px; }
   .filtros { flex-direction: column; gap: 10px; align-items: stretch; }
   .buscador { min-width: auto; width: 100%; }
   .section { padding: 40px 0; }
-  body { font-size: 16px; } /* Base legible */
+  body { font-size: 16px; }
+  .whatsapp, .btn-carrito-flotante { width: 55px; height: 55px; font-size: 20px; }
+  .btn-carrito-flotante { bottom: 80px; }
 }
-
-/* Mejora general mobile <768px */
-@media (max-width: 768px) {
-  .cards { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
-  .producto-img { height: 120px; }
-}
-.btn-carrito-flotante {
-  position: fixed;
-  bottom: 90px; /* Encima del WhatsApp */
-  right: 20px;
-  background: var(--verde-principal);
-  color: white;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  text-decoration: none;
-  z-index: 999;
-  transition: all 0.3s;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-}
-
-.btn-carrito-flotante:hover {
-  transform: scale(1.1);
-  background: var(--verde-secundario);
-}
-
-#contador-carrito {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  background: #ff4444;
-  color: white;
-  border-radius: 50%;
-  width: 24px;
-  height: 24px;
-  font-size: 12px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Oculta si vacío */
-.btn-carrito-flotante.vacio {
-  opacity: 0.5;
-  pointer-events: none;
-}
-
-
-
-
-
