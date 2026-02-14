@@ -229,7 +229,7 @@ body {
 
 /* Icono lupa integrado */
 .buscador-container::before {
-  content: '🔍';
+  content: '';
   position: absolute;
   left: 20px;
   top: 50%;
@@ -660,6 +660,7 @@ footer {
     padding: 40px 0;
   }
 }
+
 
 
 
