@@ -100,13 +100,21 @@
     </section>
 
     <!-- CARRITO -->
-    <div id="carrito" class="carrito">
-        <button onclick="cerrarCarrito()" class="cerrar-carrito">×</button>
-        <h3>Carrito</h3>
-        <ul id="lista-carrito"></ul>
-        <p><strong>Total: S/ <span id="total">0.00</span></strong></p>
-        <button onclick="comprarWhatsApp()">Comprar por WhatsApp</button>
-    </div>
+<div id="carrito" class="carrito">
+    <button onclick="cerrarCarrito()" class="cerrar-carrito">×</button>
+    <h3>Carrito</h3>
+    <ul id="lista-carrito"></ul>
+    <p class="total-carrito">
+        <strong>Total: S/ <span id="total">0.00</span></strong>
+    </p>
+
+    <!-- BOTÓN PROFESIONAL -->
+    <button onclick="comprarWhatsApp()" class="btn-comprar">
+        <span class="icono-wsp"></span>
+        Comprar por WhatsApp
+    </button>
+
+</div>
 
     <footer>
         <p>© 2026 OLIBU Natural - Todos los derechos reservados</p>
@@ -117,6 +125,7 @@
     <script src="script.js"></script>
 </body>
 </html>
+
 
 
 
