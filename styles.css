@@ -415,7 +415,18 @@ footer {
   }
   .carrito {
     width: 100%;
+    right: -100%; /* 🔥 CORRECCIÓN CLAVE */
   }
+  .carrito {
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+}
+  .carrito.activo {
+    right: 0;
+  }
+
 }
 
 @media (min-width: 1200px) {
@@ -575,3 +586,4 @@ footer {
   .whatsapp, .btn-carrito-flotante { width: 55px; height: 55px; font-size: 20px; }
   .btn-carrito-flotante { bottom: 80px; }
 }
+
