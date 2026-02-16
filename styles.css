@@ -473,20 +473,18 @@ footer {
 
 /* NUESTRA HISTORIA - DISEÑO */
 #nosotros {
-  padding: 100px 20px;
+  padding: 80px 0; 
   background: linear-gradient(135deg, #f5f2ea, #e8e2d6);
-  display: flex;
-  justify-content: center;
 }
 
 #nosotros .contenedor {
-  max-width: 900px;
+  width: 100%;          /* ocupa todo */
+  max-width: 100%;      /* elimina límite */
+  padding: 80px 20px;   /* espacio interno */
   background: rgba(255, 255, 255, 0.9);
-  padding: 60px 50px;
-  border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  border-radius: 0;     
+  box-shadow: none;     
   text-align: center;
-  position: relative;
 }
 
 #nosotros h2 {
@@ -579,5 +577,6 @@ footer {
   .whatsapp, .btn-carrito-flotante { width: 55px; height: 55px; font-size: 20px; }
   .btn-carrito-flotante { bottom: 80px; }
 }
+
 
 
