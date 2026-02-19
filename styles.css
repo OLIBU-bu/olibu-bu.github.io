@@ -107,10 +107,11 @@ body {
 
 /* Estado cuando haces scroll */
 .navbar.scrolled {
-  background: rgba(46, 77, 60, 0.95);
-  backdrop-filter: blur(8px);
-  padding: 12px 60px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+background: rgba(3, 95, 45, 0.95);
+backdrop-filter: blur(8px);
+padding: 12px 60px;
+box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+
 }
 
 /* Logo */
@@ -721,6 +722,7 @@ html {
   font-size: 18px;
   color: #444;
 }
+
 
 
 
