@@ -1,6 +1,7 @@
 /* VARIABLES GLOBALES */
 let categoriaActual = 'Todos';
 let carrito = [];
+let totalCarrito = 0;
 
 /* GENERAR CATEGORIAS */
 function generarCategorias() {
@@ -77,6 +78,86 @@ function toggleCarrito() {
   document.getElementById('carrito').classList.toggle('activo');
 }
 
+/* VARIABLES GLOBALES */
+let categoriaActual = 'Todos';
+let carrito = [];
+let totalCarrito = 0; // ← NUEVA VARIABLE GLOBAL
+
+/* GENERAR CATEGORIAS */
+function generarCategorias() {
+  const menu = document.getElementById('menu-categorias');
+  const categorias = ['Todos', ...new Set(productos.map(p => p.categoria))];
+  menu.innerHTML = '';
+  
+  categorias.forEach(cat => {
+    menu.innerHTML += `<button onclick="cambiarCategoria('${cat}')" class="${cat === categoriaActual ? 'activa' : ''}">${cat}</button>`;
+  });
+}
+
+/* CAMBIAR CATEGORIA */
+function cambiarCategoria(cat) {
+  categoriaActual = cat;
+  generarCategorias();
+  renderProductos();
+}
+
+/* OBTENER PRECIO SEGÚN CANTIDAD */
+function obtenerPrecio(producto, cantidad = 1) {
+  let precio = producto.precios[0].precio;
+  producto.precios.forEach(p => {
+    if (cantidad >= p.min) precio = p.precio;
+  });
+  return parseFloat(precio);
+}
+
+/* MOSTRAR PRODUCTOS */
+function renderProductos() {
+  const contenedor = document.getElementById('lista-productos');
+  const textoBusqueda = document.getElementById('buscador').value.toLowerCase();
+  contenedor.innerHTML = '';
+
+  const filtrados = productos.filter(p => {
+    const coincideCategoria = categoriaActual === 'Todos' || p.categoria === categoriaActual;
+    const coincideBusqueda = p.nombre.toLowerCase().includes(textoBusqueda);
+    return coincideCategoria && coincideBusqueda;
+  });
+
+  filtrados.forEach(p => {
+    const precioBase = obtenerPrecio(p, 1);
+    contenedor.innerHTML += `
+      <div class="card">
+        <img src="${p.imagen}" class="producto-img" alt="${p.nombre}">
+        <h3>${p.nombre}</h3>
+        <p>S/ ${precioBase.toFixed(2)}</p>
+        <button onclick="agregarCarrito(${p.id})">Agregar al carrito</button>
+      </div>
+    `;
+  });
+}
+
+/* FILTRO BUSCADOR */
+function filtrarProductos() {
+  renderProductos();
+}
+
+/* AGREGAR AL CARRITO */
+function agregarCarrito(id) {
+  const producto = productos.find(p => p.id == id);
+  const item = carrito.find(i => i.id == id);
+  
+  if (item) {
+    item.cantidad++;
+  } else {
+    carrito.push({ id: producto.id, nombre: producto.nombre, cantidad: 1 });
+  }
+  actualizarCarrito();
+}
+
+/* ACTIVA EL CARRITO LATERAL */
+function toggleCarrito() {
+  document.getElementById('carrito').classList.toggle('activo');
+}
+
 /* CERRAR CARRITO */
 function cerrarCarrito() {
   document.getElementById('carrito').classList.remove('activo');
@@ -107,6 +188,7 @@ function actualizarCarrito() {
   carritoDiv.innerHTML = '';
   
   let total = 0;
+
   carrito.forEach(item => {
     const producto = productos.find(p => p.id == item.id);
     const precioUnitario = obtenerPrecio(producto, item.cantidad);
@@ -132,10 +214,11 @@ function actualizarCarrito() {
   });
   
   totalSpan.textContent = total.toFixed(2);
-  actualizarContadorCarrito(); /* Actualiza contador flotante */
+  totalCarrito = total; // ← GUARDAMOS TOTAL GLOBAL
+  actualizarContadorCarrito();
 }
 
-/* CONTADOR CARRITO FLOTANTE */
+/* CONTADOR CARRITO */
 function actualizarContadorCarrito() {
   const btn = document.getElementById('btn-carrito-flotante');
   const contador = document.getElementById('contador-carrito');
@@ -150,28 +233,6 @@ function actualizarContadorCarrito() {
   }
 }
 
-/* COMPRAR POR WHATSAPP */
-function comprarWhatsApp() {
-  if (carrito.length === 0) {
-    alert('El carrito está vacío');
-    return;
-  }
-  
-  let mensaje = 'Hola, quiero hacer el siguiente pedido:\n\n';
-  let total = 0;
-  
-  carrito.forEach(item => {
-    const producto = productos.find(p => p.id == item.id);
-    const precioUnitario = obtenerPrecio(producto, item.cantidad);
-    const subtotal = precioUnitario * item.cantidad;
-    total += subtotal;
-    mensaje += `- ${producto.nombre} x${item.cantidad}: S/ ${subtotal.toFixed(2)}\n`;
-  });
-  
-  mensaje += `\nTotal: S/ ${total.toFixed(2)}`;
-  window.open(`https://wa.me/51950303041?text=${encodeURIComponent(mensaje)}`, '_blank');
-}
-
 /* EFECTO NAVBAR SCROLL */
 window.addEventListener('scroll', function() {
   const navbar = document.querySelector('.navbar');
@@ -184,32 +245,40 @@ window.addEventListener('scroll', function() {
 
 /* INICIALIZACIÓN */
 document.addEventListener('DOMContentLoaded', function() {
+
   generarCategorias();
   renderProductos();
   actualizarContadorCarrito();
   
-  /* Event listener botón carrito flotante */
   document.getElementById('btn-carrito-flotante').addEventListener('click', function(e) {
     e.preventDefault();
     toggleCarrito();
   });
   
-  /* Buscador */
   document.getElementById('buscador').addEventListener('input', filtrarProductos);
-});
 
-// Animación del título al hacer scroll
-const tituloVideo = document.querySelector(".titulo-video");
+  /* ===== INTEGRACIÓN CULQI ===== */
+  const btnPagar = document.getElementById("btn-pagar");
 
-function mostrarTitulo() {
-  const posicion = tituloVideo.getBoundingClientRect().top;
-  const alturaPantalla = window.innerHeight;
+  if (btnPagar) {
+    btnPagar.addEventListener("click", () => {
 
-  if (posicion < alturaPantalla - 100) {
-    tituloVideo.classList.add("activo");
+      if (totalCarrito <= 0) {
+        alert("El carrito está vacío");
+        return;
+      }
+
+      const culqi = new CulqiCheckout({
+        publicKey: "TU_PUBLIC_KEY_AQUI",
+        settings: {
+          title: "Olibu",
+          currency: "PEN",
+          amount: Math.round(totalCarrito * 100)
+        }
+      });
+
+      culqi.open();
+    });
   }
-}
 
-window.addEventListener("scroll", mostrarTitulo);
-window.addEventListener("load", mostrarTitulo);
-
+});
