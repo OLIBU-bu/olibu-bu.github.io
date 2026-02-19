@@ -136,7 +136,7 @@ body {
   color: white;
 }
 .logo-img {
-  height: 48px;   /* prueba 45px – 55px según lo veas */
+  height: 55px;   /* prueba 45px – 55px según lo veas */
   width: auto;
   display: block;
 }
@@ -735,6 +735,7 @@ html {
   font-size: 18px;
   color: #444;
 }
+
 
 
 
