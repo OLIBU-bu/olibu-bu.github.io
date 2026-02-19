@@ -258,27 +258,32 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('buscador').addEventListener('input', filtrarProductos);
 
   /* ===== INTEGRACIÓN CULQI ===== */
-  const btnPagar = document.getElementById("btn-pagar");
+const btnPagar = document.getElementById("btn-pagar");
 
-  if (btnPagar) {
-    btnPagar.addEventListener("click", () => {
+if (btnPagar) {
+  btnPagar.onclick = function () {
 
-      if (totalCarrito <= 0) {
-        alert("El carrito está vacío");
-        return;
+    if (totalCarrito <= 0) {
+      alert("El carrito está vacío");
+      return;
+    }
+
+    if (typeof CulqiCheckout === "undefined") {
+      alert("Culqi no está cargando correctamente.");
+      return;
+    }
+
+    const culqi = new CulqiCheckout({
+      publicKey: "TU_PUBLIC_KEY_REAL",
+      settings: {
+        title: "Olibu",
+        currency: "PEN",
+        amount: Math.round(totalCarrito * 100)
       }
-
-      const culqi = new CulqiCheckout({
-        publicKey: "TU_PUBLIC_KEY_AQUI",
-        settings: {
-          title: "Olibu",
-          currency: "PEN",
-          amount: Math.round(totalCarrito * 100)
-        }
-      });
-
-      culqi.open();
     });
-  }
 
-});
+    culqi.open();
+  };
+}
+  
+
