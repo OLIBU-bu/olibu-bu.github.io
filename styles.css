@@ -121,7 +121,10 @@ body {
   align-items: center;
   gap: 10px;
   font-family: 'Playfair Display', serif;
-  font-size: 26px;
+  font-size: 30px;              /* más grande */
+  font-weight: 600;
+  letter-spacing: 2px;          /* separación elegante */
+  text-transform: uppercase;    /* siempre mayúscula */
   color: white;
 }
 
@@ -725,6 +728,7 @@ html {
   font-size: 18px;
   color: #444;
 }
+
 
 
 
