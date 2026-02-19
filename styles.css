@@ -593,24 +593,25 @@ footer {
 }
 
 .video-wrapper {
-  position: relative;
-  padding-bottom: 35%; /* antes era 56.25% */
-  height: 0;
-  max-width: 600px; /* más pequeño */
-  margin: auto;
+  max-width: 900px;   /* tamaño máximo cercano a 1024 */
+  width: 100%;
+  margin: 0 auto;
   border-radius: 15px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
 .video-wrapper iframe {
-  position: absolute;
   width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  border: 0;
+  height: 500px;  /* altura proporcional más controlada */
+  border: none;
 }
+@media (max-width: 768px) {
+  .video-wrapper iframe {
+    height: 250px;
+  }
+}
+
 
 
 
