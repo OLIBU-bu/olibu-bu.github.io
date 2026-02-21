@@ -115,22 +115,26 @@ body {
 
 }
 
-/* Logo */
+/* CONTENEDOR DEL LOGO */
 .logo {
-  display: flex;              /* los pone en fila */
-  align-items: center;        /* centra verticalmente */
-  gap: 10px;                  /* espacio entre imagen y texto */
+  display: flex !important;
+  align-items: center !important;
+  flex-direction: row !important;
 }
 
-.logo-img {
-  height: 48px;               /* deja el tamaño que ya te gusta */
+/* IMAGEN */
+.logo img {
+  height: 55px;   /* ajusta si quieres */
   width: auto;
-  display: block;
+  display: inline-block;
 }
 
+/* TEXTO */
 .logo span {
+  display: inline-block;
+  margin-left: 10px;
   font-family: 'Playfair Display', serif;
-  font-size: 28px;
+  font-size: 30px;
   font-weight: 600;
   letter-spacing: 2px;
   color: white;
@@ -730,6 +734,7 @@ html {
   font-size: 18px;
   color: #444;
 }
+
 
 
 
