@@ -419,25 +419,27 @@ footer {
     flex-direction: column;
     gap: 15px;
   }
+
   .navbar ul {
     flex-wrap: wrap;
     justify-content: center;
   }
+
   .hero-text h1 {
     font-size: 28px;
   }
+
   .carrito {
     width: 100%;
-    right: -100%; 
+    right: -100%;
     border-radius: 0;
     box-shadow: none;
   }
-
 }
-  .carrito.activo {
-    right: 0;
-  }
 
+
+.carrito.activo {
+  right: 0;
 }
 
 @media (min-width: 1200px) {
@@ -757,6 +759,7 @@ nav ul li a {
 nav ul li a:hover {
   opacity: 0.8;
 }
+
 
 
 
