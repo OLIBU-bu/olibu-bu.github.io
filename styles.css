@@ -734,6 +734,30 @@ html {
   color: #444;
 }
 
+/* ===== NAVBAR MENU FIX ===== */
+
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 30px;
+  margin: 0;
+  padding: 0;
+}
+
+nav ul li {
+  list-style: none;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+}
+
+nav ul li a:hover {
+  opacity: 0.8;
+}
 
 
 
