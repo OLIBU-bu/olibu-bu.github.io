@@ -808,3 +808,31 @@ nav ul li a:hover {
 .redes img:hover {
   transform: scale(1.2);
 }
+
+.btn-comprar {
+  width: 100%;
+  padding: 16px 20px;
+  margin-top: 15px;
+  background: #25D366; /* verde WhatsApp */
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 18px rgba(37, 211, 102, 0.25);
+}
+
+.btn-comprar:hover {
+  background: #1ebe5d;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(37, 211, 102, 0.35);
+}
+
+@media (max-width: 768px) {
+  .btn-comprar {
+    font-size: 18px;
+    padding: 18px;
+  }
+}
