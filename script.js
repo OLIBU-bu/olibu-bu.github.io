@@ -198,34 +198,36 @@ function comprarWhatsApp() {
   const destino = document.getElementById("destinoCliente").value.trim();
 
   if (!nombre || !dni || !destino) {
-    alert("Por favor completa todos los datos del comprador.");
+    alert("Por favor completa todos los datos.");
     return;
   }
 
-  let mensaje = "🛒 *NUEVO PEDIDO OLIBU* %0A%0A";
+  let mensaje = `🛒 *NUEVO PEDIDO OLIBU*
 
-  mensaje += `👤 Nombre: ${nombre}%0A`;
-  mensaje += `🪪 DNI: ${dni}%0A`;
-  mensaje += `📍 Destino: ${destino}%0A%0A`;
+👤 Nombre: ${nombre}
+🪪 DNI: ${dni}
+📍 Destino: ${destino}
 
-  mensaje += "📦 *Productos:* %0A%0A";
+📦 *PRODUCTOS:*
+
+`;
 
   carrito.forEach(item => {
     const producto = productos.find(p => p.id == item.id);
     const precioUnitario = obtenerPrecio(producto, item.cantidad);
     const subtotal = precioUnitario * item.cantidad;
 
-    mensaje += `• ${producto.nombre}%0A`;
-    mensaje += `  Cantidad: ${item.cantidad}%0A`;
-    mensaje += `  Subtotal: S/ ${subtotal.toFixed(2)}%0A%0A`;
+    mensaje += `• ${producto.nombre}
+  Cantidad: ${item.cantidad}
+  Subtotal: S/ ${subtotal.toFixed(2)}
+
+`;
   });
 
   mensaje += `💰 *TOTAL: S/ ${totalCarrito.toFixed(2)}*`;
 
   const numero = "51950303041";
-  const url = `https://wa.me/${numero}?text=${mensaje}`;
+  const url = `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
 
   window.open(url, "_blank");
 }
-
-
