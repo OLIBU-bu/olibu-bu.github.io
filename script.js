@@ -170,7 +170,8 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('buscador')
     .addEventListener('input', filtrarProductos);
 
-
+ });
+  
   
 /* EFECTO NAVBAR SCROLL */
 window.addEventListener('scroll', function() {
@@ -211,4 +212,5 @@ function comprarWhatsApp() {
 
   window.open(url, "_blank");
 }
+
 
