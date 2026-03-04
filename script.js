@@ -212,3 +212,30 @@ window.addEventListener('scroll', function() {
     navbar.classList.remove('scrolled');
   }
 });
+
+function comprarWhatsApp() {
+
+  if (carrito.length === 0) {
+    alert("El carrito está vacío");
+    return;
+  }
+
+  let mensaje = "Hola, quiero comprar los siguientes productos:%0A%0A";
+
+  carrito.forEach(item => {
+    const producto = productos.find(p => p.id == item.id);
+    const precioUnitario = obtenerPrecio(producto, item.cantidad);
+    const subtotal = precioUnitario * item.cantidad;
+
+    mensaje += `• ${producto.nombre}%0A`;
+    mensaje += `  Cantidad: ${item.cantidad}%0A`;
+    mensaje += `  Subtotal: S/ ${subtotal.toFixed(2)}%0A%0A`;
+  });
+
+  mensaje += `TOTAL: S/ ${totalCarrito.toFixed(2)}`;
+
+  const numero = "51950303041"; // tu número sin +
+  const url = `https://wa.me/${numero}?text=${mensaje}`;
+
+  window.open(url, "_blank");
+}
