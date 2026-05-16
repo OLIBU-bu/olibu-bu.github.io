@@ -548,7 +548,7 @@
       if (typeof _orig === 'function') {
         window.agregarCarrito = function (id, cantidad) {
           // Buscar el producto en el array global "productos" de productos.js
-          var p = (window.productos || []).find(function (x) { return x.id == id; });
+          var p = (typeof productos !== 'undefined' ? productos : []).find(function (x) { return x.id == id; });
           if (p) {
             var stock = window.olibustockMap[p.nombre.trim().toLowerCase()];
             if (stock !== undefined && stock <= 0) {
