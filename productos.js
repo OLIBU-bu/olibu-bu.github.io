@@ -519,8 +519,8 @@ const productos = [
     categoria: "Aceitunas enteras - segunda",
     imagen: "img/Negra - Segunda - 500gr.png",
     precios: [
-      { min: 1, precio: 10.5 },
-      { min: 6, precio: 8 }
+      { min: 1, precio: 12 },
+      { min: 6, precio: 10 }
     ]
   },
     {
@@ -529,8 +529,8 @@ const productos = [
     categoria: "Aceitunas enteras - segunda",
     imagen: "img/Negra - Segunda - 1Kg.png",
     precios: [
-      { min: 1, precio: 20 },
-      { min: 6, precio: 18 }
+      { min: 1, precio: 22 },
+      { min: 6, precio: 20 }
     ]
   },
 
@@ -974,8 +974,8 @@ const productos = [
     categoria: "Miel de abeja y polen",
     imagen: "img/Miel - 500gr.png",
     precios: [
-      { min: 1, precio: 20 },
-      { min: 6, precio: 19 }
+      { min: 1, precio: 22 },
+      { min: 6, precio: 21 }
     ]
   },
     {
