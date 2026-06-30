@@ -125,6 +125,19 @@ const productos = [
       { min: 6, precio: 36 }
     ]
   },
+
+   {
+    id: 111,
+    nombre: "Aceite de Oliva Extra Virgen 1L - Vidrio presentacion 2",
+    categoria: "Aceite de Oliva Extra Virgen",
+    imagen: "img/Aceite de Oliva Extra Virgen 1L - Vidrio2.png",
+    precios: [
+      { min: 1, precio: 40 },
+      { min: 12, precio: 38 }
+    ]
+  },
+
+   
      {
     id: 12,
     nombre: "Aceite de Oliva Extra Virgen 1L - Ambar",
