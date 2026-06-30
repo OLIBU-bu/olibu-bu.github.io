@@ -700,32 +700,32 @@ const productos = [
     // ACEITUNAS EN PICADILLOS
     {
     id: 65,
-    nombre: "Negra - Picadillo - 1.25Kg",
+    nombre: "Negra - Picadillo - 1.5Kg",
     categoria: "Aceitunas en Picadillos",
     imagen: "img/Negra - Picadillo - 1.25Kg.png",
     precios: [
-      { min: 1, precio: 9.5 },
-      { min: 6, precio: 9 }
+      { min: 1, precio: 45 },
+      { min: 12, precio: 40 }
     ]
   },
     {
     id: 66,
-    nombre: "Crema - Picadillo - 1.25Kg",
+    nombre: "Crema - Picadillo - 1.5Kg",
     categoria: "Aceitunas en Picadillos",
     imagen: "img/Crema - Picadillo - 1.25Kg.png",
     precios: [
-      { min: 1, precio: 9.5 },
-      { min: 6, precio: 9 }
+      { min: 1, precio: 45 },
+      { min: 12, precio: 40 }
     ]
   },
     {
     id: 67,
-    nombre: "Verde - Picadillo - 1.25Kg",
+    nombre: "Verde - Picadillo - 1.5Kg",
     categoria: "Aceitunas en Picadillos",
     imagen: "img/Verde - Picadillo - 1.25Kg.png",
     precios: [
-      { min: 1, precio: 16.5 },
-      { min: 6, precio: 15 }
+      { min: 1, precio: 45 },
+      { min: 12, precio: 40 }
     ]
   },
 
