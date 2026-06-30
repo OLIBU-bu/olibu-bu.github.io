@@ -705,7 +705,7 @@ const productos = [
     imagen: "img/Negra - Picadillo - 1.25Kg.png",
     precios: [
       { min: 1, precio: 45 },
-      { min: 12, precio: 40 }
+      { min: 6, precio: 40 }
     ]
   },
     {
@@ -715,7 +715,7 @@ const productos = [
     imagen: "img/Crema - Picadillo - 1.25Kg.png",
     precios: [
       { min: 1, precio: 45 },
-      { min: 12, precio: 40 }
+      { min: 6, precio: 40 }
     ]
   },
     {
@@ -725,7 +725,7 @@ const productos = [
     imagen: "img/Verde - Picadillo - 1.25Kg.png",
     precios: [
       { min: 1, precio: 45 },
-      { min: 12, precio: 40 }
+      { min: 6, precio: 40 }
     ]
   },
 
