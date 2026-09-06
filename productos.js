@@ -1,10 +1,12 @@
 /* ======================================
-   AQUÍ SE EDITAN TODOS LOS PRODUCTOS
-   Para cambiar imagen:
-   imagen: "img/nombre.png"
-
-   Para cambiar precio:
-   { min: 1, precio: 20 }
+   ⚠️ ARCHIVO EN DESUSO (respaldo histórico)
+   ======================================
+   Desde que se conectó el catálogo a Supabase, este archivo YA NO
+   se usa en index.html (fue reemplazado por catalogo.js). Los
+   productos ahora se administran 100% desde el sistema.
+   Se deja aquí solo como referencia de los precios/categorías
+   originales por si algo sale mal en la migración.
+   Puedes borrar este archivo cuando confirmes que todo funciona bien.
 ====================================== */
 
 

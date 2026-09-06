@@ -176,13 +176,15 @@ function renderProductos() {
   filtrados.forEach(function(p) {
     const precioBase = obtenerPrecio(p, 1);
     const precioMay = p.precios.length > 1 ? p.precios[p.precios.length - 1] : null;
+    const agotado = p.stock !== undefined && p.stock !== null && p.stock <= 0;
 
     const card = document.createElement('div');
     card.className = 'product-card';
+    if (agotado) card.dataset.agotado = '1';
     card.innerHTML =
       '<div class="product-img-wrap">' +
-        (precioMay ? '<span class="mayorista-tag">Mayorista</span>' : '') +
-        '<img src="' + p.imagen + '" alt="' + p.nombre + '" loading="lazy">' +
+        (agotado ? '<div class="olibu-agotado-badge">AGOTADO</div>' : (precioMay ? '<span class="mayorista-tag">Mayorista</span>' : '')) +
+        '<img src="' + p.imagen + '" alt="' + p.nombre + '" loading="lazy" style="' + (agotado ? 'filter:grayscale(45%) opacity(0.8)' : '') + '">' +
       '</div>' +
       '<div class="product-info">' +
         '<p class="product-cat">' + p.categoria + '</p>' +
@@ -191,9 +193,9 @@ function renderProductos() {
           '<span class="price-main">S/ ' + precioBase.toFixed(2) + '</span>' +
           (precioMay ? '<span class="price-may">Desde ' + precioMay.min + ' und.<strong>S/ ' + precioMay.precio.toFixed(2) + '</strong></span>' : '') +
         '</div>' +
-        '<button class="btn-agregar">' +
+        '<button class="btn-agregar"' + (agotado ? ' disabled style="opacity:.45;cursor:not-allowed;"' : '') + '>' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14"><path d="M12 5v14M5 12h14"/></svg>' +
-          'Agregar al carrito' +
+          (agotado ? 'Agotado' : 'Agregar al carrito') +
         '</button>' +
       '</div>';
 
@@ -205,6 +207,7 @@ function renderProductos() {
     });
 
     contenedor.appendChild(card);
+    animarCardEntrada(card);
   });
 }
 
@@ -240,6 +243,17 @@ function abrirModal(id) {
 
   actualizarModalSubtotal();
 
+  const agotado = p.stock !== undefined && p.stock !== null && p.stock <= 0;
+  const btnModalAgregar = document.querySelector('.btn-modal-agregar');
+  if (btnModalAgregar) {
+    btnModalAgregar.disabled = agotado;
+    btnModalAgregar.style.opacity = agotado ? '.45' : '';
+    btnModalAgregar.style.cursor = agotado ? 'not-allowed' : '';
+    btnModalAgregar.textContent = agotado ? '❌ Agotado' : (btnModalAgregar.dataset.textoOrig || btnModalAgregar.textContent);
+    if (!agotado && btnModalAgregar.dataset.textoOrig) btnModalAgregar.textContent = btnModalAgregar.dataset.textoOrig;
+    if (!btnModalAgregar.dataset.textoOrig && !agotado) btnModalAgregar.dataset.textoOrig = btnModalAgregar.textContent;
+  }
+
   document.getElementById('modal-overlay').classList.add('activo');
   document.getElementById('modal-producto').classList.add('activo');
   document.body.style.overflow = 'hidden';
@@ -267,6 +281,10 @@ function actualizarModalSubtotal() {
 
 function modalAgregarCarrito() {
   if (!productoModal) return;
+  if (productoModal.stock !== undefined && productoModal.stock !== null && productoModal.stock <= 0) {
+    mostrarToast('❌ "' + productoModal.nombre + '" está agotado.');
+    return;
+  }
   agregarCarrito(productoModal.id, cantidadModal);
   cerrarModal();
 }
@@ -276,6 +294,11 @@ function modalAgregarCarrito() {
 =========================== */
 function agregarCarrito(id, cantidad) {
   const producto = productos.find(function(p) { return p.id == id; });
+  if (!producto) return;
+  if (producto.stock !== undefined && producto.stock !== null && producto.stock <= 0) {
+    mostrarToast('❌ "' + producto.nombre + '" está agotado.');
+    return;
+  }
   const item = carrito.find(function(i) { return i.id == id; });
   cantidad = cantidad || 1;
 
@@ -430,10 +453,10 @@ function mostrarToast(mensaje) {
    INICIALIZACIÓN
 =========================== */
 document.addEventListener('DOMContentLoaded', function() {
-  generarCategorias();
-  renderProductos();
+  // El catálogo (generarCategorias, renderProductos, renderDestacados)
+  // ahora lo dispara catalogo.js una vez que trae los productos desde
+  // Supabase. Aquí solo dejamos lo que no depende de esos datos.
   actualizarContador();
-  renderDestacados();
 
   // Carrito
   const btnCarrito = document.getElementById('btn-carrito-flotante');
@@ -472,8 +495,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 
-  // Animaciones scroll general
-  const scrollObserver = new IntersectionObserver(function(entries) {
+  // Animaciones scroll general (las .product-card se agregan a este
+  // observer dentro de renderProductos, porque ahora se crean después
+  // de que catalogo.js trae los datos de Supabase)
+  window.olibuScrollObserver = new IntersectionObserver(function(entries) {
     entries.forEach(function(entry) {
       if (entry.isIntersecting) {
         entry.target.style.opacity = '1';
@@ -482,34 +507,57 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }, { threshold: 0.12 });
 
-  document.querySelectorAll('.beneficio-card, .testimonio-card, .product-card').forEach(function(el) {
+  document.querySelectorAll('.beneficio-card, .testimonio-card').forEach(function(el) {
     el.style.opacity = '0';
     el.style.transform = 'translateY(24px)';
     el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-    scrollObserver.observe(el);
+    window.olibuScrollObserver.observe(el);
   });
 });
+
+function animarCardEntrada(el) {
+  if (!window.olibuScrollObserver) return;
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(24px)';
+  el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+  window.olibuScrollObserver.observe(el);
+}
 
 /* ===========================
    DESTACADOS
 =========================== */
-const IDS_DESTACADOS = [8, 12, 16, 18, 68, 70, 75, 92, 87, 91];
+// Antes esta lista usaba los IDs fijos de productos.js. Ahora que los
+// IDs los asigna Supabase automáticamente, usamos el NOMBRE exacto del
+// producto (debe coincidir con el nombre guardado en el sistema).
+const NOMBRES_DESTACADOS = [
+  'Aceite de Oliva Extra Virgen 500ml - Ambar',
+  'Aceite de Oliva Extra Virgen 1L - Ambar',
+  'Verde Super Extra - 600gr',
+  'Negra - 1.25Kg',
+  'Rellena en Frasco - Rocoto - 450gr',
+  'Rellena en Frasco - Rocoto - 350gr',
+  'Rellena en Frasco - Castaña - 350gr',
+  'Miel - 500gr',
+  'Mix Olibu - 200gr',
+  'Mix Olibu - 420gr'
+];
 
 function renderDestacados() {
   const track = document.getElementById('destacados-track');
   if (!track) return;
   track.innerHTML = '';
-  IDS_DESTACADOS.forEach(function(id) {
-    const p = productos.find(function(x) { return x.id === id; });
+  NOMBRES_DESTACADOS.forEach(function(nombre) {
+    const p = productos.find(function(x) { return x.nombre === nombre; });
     if (!p) return;
     const precioBase = obtenerPrecio(p, 1);
     const precioMay = p.precios.length > 1 ? p.precios[p.precios.length - 1] : null;
+    const agotado = p.stock !== undefined && p.stock !== null && p.stock <= 0;
     const card = document.createElement('div');
     card.className = 'dest-card';
     card.innerHTML =
       '<div class="dest-img-wrap">' +
-        '<img src="' + p.imagen + '" alt="' + p.nombre + '" loading="lazy">' +
-        (precioMay ? '<span class="dest-tag">Mayorista</span>' : '') +
+        '<img src="' + p.imagen + '" alt="' + p.nombre + '" loading="lazy" style="' + (agotado ? 'filter:grayscale(45%) opacity(0.8)' : '') + '">' +
+        (agotado ? '<span class="dest-tag" style="background:#c0392b;">AGOTADO</span>' : (precioMay ? '<span class="dest-tag">Mayorista</span>' : '')) +
       '</div>' +
       '<div class="dest-info">' +
         '<p class="dest-cat">' + p.categoria + '</p>' +
@@ -518,9 +566,9 @@ function renderDestacados() {
           '<span class="dest-price">S/ ' + precioBase.toFixed(2) + '</span>' +
           (precioMay ? '<span class="dest-price-may">Mayor: S/ ' + precioMay.precio.toFixed(2) + '</span>' : '') +
         '</div>' +
-        '<button class="dest-btn-agregar" data-id="' + p.id + '">' +
+        '<button class="dest-btn-agregar" data-id="' + p.id + '"' + (agotado ? ' disabled style="opacity:.45;cursor:not-allowed;"' : '') + '>' +
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13"><path d="M12 5v14M5 12h14"/></svg>' +
-          'Agregar' +
+          (agotado ? 'Agotado' : 'Agregar') +
         '</button>' +
       '</div>';
     card.querySelector('.dest-img-wrap').addEventListener('click', function() { abrirModal(p.id); });

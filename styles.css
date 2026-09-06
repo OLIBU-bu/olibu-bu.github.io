@@ -651,6 +651,23 @@ button { cursor: pointer; font-family: var(--font-sans); }
   text-transform: uppercase;
 }
 
+.olibu-agotado-badge {
+  position: absolute;
+  top: 10px; right: 10px;
+  z-index: 5;
+  background: #c0392b;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  pointer-events: none;
+}
+
+.product-card[data-agotado="1"] { opacity: .85; }
+.product-card[data-agotado="1"]:hover { transform: none !important; box-shadow: none !important; }
+
 .product-info {
   padding: 16px;
   flex: 1;
