@@ -170,15 +170,43 @@
         <h2 class="section-title">Nuestros <em>Productos</em></h2>
         <p class="section-subtitle">Del olivar a tu mesa. Selección artesanal con los más altos estándares de calidad.</p>
       </div>
-      <div class="filtros-wrapper">
-        <div class="categorias-scroll" id="menu-categorias"></div>
-        <div class="buscador-wrapper">
-          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-          <input type="text" id="buscador" class="buscador" placeholder="Buscar producto...">
+
+<div class="filtros-wrapper">
+    <div class="categorias-scroll" id="menu-categorias"></div>
+
+    <div class="buscador-wrapper">
+        <svg class="search-icon"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+        </svg>
+
+        <input
+            type="text"
+            id="buscador"
+            class="buscador"
+            placeholder="Buscar producto..."
+            autocomplete="off"
+            aria-autocomplete="list"
+            aria-controls="buscador-sugerencias"
+            aria-expanded="false"
+        >
+
+        <div
+            id="buscador-sugerencias"
+            class="buscador-sugerencias"
+            hidden>
         </div>
-      </div>
-      <div class="resultados-info" id="resultados-info"></div>
-      <div class="products-grid" id="lista-productos"></div>
+    </div>
+</div>
+
+<div class="resultados-info" id="resultados-info"></div>
+
+<div class="products-grid" id="lista-productos"></div>
+
     </div>
   </section>
 
