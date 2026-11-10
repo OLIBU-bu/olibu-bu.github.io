@@ -2888,3 +2888,126 @@ a.contacto-item:hover {
   .promo-slider-header { gap: 12px; }
   .promo-header-line { width: 35px; }
 }
+
+
+/* =========================================
+   OLIBU — BUSCADOR INTELIGENTE
+========================================= */
+
+/* Contenedor del buscador */
+.buscador-wrapper {
+    position: relative;
+    z-index: 50;
+}
+
+/* Panel de sugerencias */
+.buscador-sugerencias {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-height: 360px;
+    overflow-y: auto;
+    background: #ffffff;
+    border: 1px solid rgba(39, 75, 48, 0.12);
+    border-radius: 14px;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+    padding: 8px;
+    z-index: 999;
+    animation: sugerenciasEntrada 0.2s ease;
+}
+
+/* Ocultar correctamente el panel */
+.buscador-sugerencias[hidden] {
+    display: none !important;
+}
+
+/* Cada sugerencia */
+.buscador-sugerencia {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    width: 100%;
+    padding: 13px 15px;
+    border: none;
+    border-radius: 9px;
+    background: transparent;
+    color: #263b2b;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+/* Nombre del producto */
+.buscador-sugerencia span {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+/* Categoría y precio */
+.buscador-sugerencia small {
+    font-size: 12px;
+    color: #858d82;
+    font-weight: 400;
+}
+
+/* Efecto al pasar el cursor */
+.buscador-sugerencia:hover,
+.buscador-sugerencia:focus-visible {
+    background: #f1f5ef;
+    outline: none;
+}
+
+.buscador-sugerencia:hover {
+    transform: translateX(3px);
+}
+
+/* Mensaje cuando no hay sugerencias */
+.buscador-sin-sugerencias {
+    padding: 18px 14px;
+    color: #777f75;
+    font-size: 13px;
+    text-align: center;
+}
+
+/* Mensaje cuando no hay productos */
+.buscador-resultados-vacios {
+    grid-column: 1 / -1;
+    width: 100%;
+    padding: 35px 15px;
+    color: #777f75;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* Animación del panel */
+@keyframes sugerenciasEntrada {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Ajustes para móviles */
+@media (max-width: 600px) {
+    .buscador-sugerencias {
+        top: calc(100% + 7px);
+        max-height: 300px;
+        border-radius: 12px;
+    }
+
+    .buscador-sugerencia {
+        padding: 12px;
+    }
+
+    .buscador-sugerencia span {
+        font-size: 13px;
+    }
+}
