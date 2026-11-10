@@ -140,6 +140,214 @@ function cambiarCategoria(cat) {
   renderProductos();
 }
 
+
+/* =========================================
+   BUSCADOR INTELIGENTE OLIBU
+========================================= */
+
+const PALABRAS_IGNORADAS = new Set([
+    'de', 'del', 'la', 'el', 'los', 'las',
+    'un', 'una', 'unos', 'unas', 'por',
+    'para', 'con', 'en', 'y', 'a'
+]);
+
+function normalizarBusqueda(texto) {
+    return String(texto || '')
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/\b1000\s*(ml|mililitros)\b/g, '1l')
+        .replace(/\b(1|2|3|5)\s*(litro|litros|lt|lts)\b/g, '$1l')
+        .replace(/\b(250|500|750)\s*(ml|mililitros)\b/g, '$1ml')
+        .replace(/[^a-z0-9]+/g, ' ')
+        .trim()
+        .replace(/\s+/g, ' ');
+}
+
+function obtenerTokens(texto) {
+    return normalizarBusqueda(texto)
+        .split(' ')
+        .filter(p => p && !PALABRAS_IGNORADAS.has(p));
+}
+
+function distanciaEdicion(a, b) {
+    const matriz = [];
+
+    for (let i = 0; i <= a.length; i++) {
+        matriz[i] = [i];
+    }
+
+    for (let j = 0; j <= b.length; j++) {
+        matriz[0][j] = j;
+    }
+
+    for (let i = 1; i <= a.length; i++) {
+        for (let j = 1; j <= b.length; j++) {
+            const costo = a[i - 1] === b[j - 1] ? 0 : 1;
+
+            matriz[i][j] = Math.min(
+                matriz[i - 1][j] + 1,
+                matriz[i][j - 1] + 1,
+                matriz[i - 1][j - 1] + costo
+            );
+        }
+    }
+
+    return matriz[a.length][b.length];
+}
+
+function puntuarPalabra(busqueda, palabra) {
+    if (busqueda === palabra) return 10;
+
+    if (palabra.startsWith(busqueda) && busqueda.length >= 3) {
+        return 7;
+    }
+
+    if (busqueda.length >= 4 && palabra.length >= 4) {
+        const distancia = distanciaEdicion(busqueda, palabra);
+
+        if (distancia === 1) return 5;
+        if (distancia === 2 && busqueda.length >= 7) return 3;
+    }
+
+    return 0;
+}
+
+function analizarProducto(producto, consulta) {
+    const tokensConsulta = [...new Set(obtenerTokens(consulta))];
+
+    if (!tokensConsulta.length) {
+        return { coincide: true, puntuacion: 0 };
+    }
+
+    const nombre = obtenerTokens(producto.nombre);
+    const categoria = obtenerTokens(producto.categoria);
+
+    let puntuacion = 0;
+
+    for (const token of tokensConsulta) {
+        let mejorPuntaje = 0;
+
+        nombre.forEach(palabra => {
+            mejorPuntaje = Math.max(
+                mejorPuntaje,
+                puntuarPalabra(token, palabra)
+            );
+        });
+
+        categoria.forEach(palabra => {
+            mejorPuntaje = Math.max(
+                mejorPuntaje,
+                puntuarPalabra(token, palabra) - 1
+            );
+        });
+
+        if (mejorPuntaje <= 0) {
+            return { coincide: false, puntuacion: 0 };
+        }
+
+        puntuacion += mejorPuntaje;
+    }
+
+    return { coincide: true, puntuacion };
+}
+
+function buscarProductos(consulta) {
+    if (!obtenerTokens(consulta).length) {
+        return productos.slice();
+    }
+
+    return productos
+        .map((producto, indice) => {
+            const resultado = analizarProducto(producto, consulta);
+
+            return {
+                producto,
+                indice,
+                puntuacion: resultado.puntuacion,
+                coincide: resultado.coincide
+            };
+        })
+        .filter(item => item.coincide)
+        .sort((a, b) =>
+            b.puntuacion - a.puntuacion || a.indice - b.indice
+        )
+        .map(item => item.producto);
+}
+
+function ocultarSugerencias() {
+    const lista = document.getElementById('buscador-sugerencias');
+    const buscador = document.getElementById('buscador');
+
+    if (lista) {
+        lista.hidden = true;
+        lista.innerHTML = '';
+    }
+
+    if (buscador) {
+        buscador.setAttribute('aria-expanded', 'false');
+    }
+}
+
+function mostrarSugerencias() {
+    const buscador = document.getElementById('buscador');
+    const lista = document.getElementById('buscador-sugerencias');
+
+    if (!buscador || !lista) return;
+
+    const consulta = buscador.value.trim();
+
+    if (consulta.length < 2) {
+        ocultarSugerencias();
+        return;
+    }
+
+    const resultados = buscarProductos(consulta).slice(0, 5);
+
+    lista.innerHTML = '';
+
+    if (resultados.length === 0) {
+        const mensaje = document.createElement('div');
+        mensaje.className = 'buscador-sin-sugerencias';
+        mensaje.textContent = 'No encontramos coincidencias. Prueba con otro nombre.';
+        lista.appendChild(mensaje);
+    } else {
+        resultados.forEach(producto => {
+            const opcion = document.createElement('button');
+            opcion.type = 'button';
+            opcion.className = 'buscador-sugerencia';
+
+            const nombre = document.createElement('span');
+            nombre.textContent = producto.nombre;
+
+            const detalle = document.createElement('small');
+            detalle.textContent =
+                producto.categoria + ' · S/ ' +
+                obtenerPrecio(producto, 1).toFixed(2);
+
+            opcion.appendChild(nombre);
+            opcion.appendChild(detalle);
+
+            opcion.addEventListener('click', () => {
+                buscador.value = producto.nombre;
+                categoriaActual = 'Todos';
+
+                generarCategorias();
+                renderProductos();
+                ocultarSugerencias();
+
+                abrirModal(producto.id);
+            });
+
+            lista.appendChild(opcion);
+        });
+    }
+
+    lista.hidden = false;
+    buscador.setAttribute('aria-expanded', 'true');
+}
+
+
 /* ===========================
    PRECIO SEGÚN CANTIDAD
 =========================== */
@@ -155,61 +363,119 @@ function obtenerPrecio(producto, cantidad) {
 /* ===========================
    RENDER PRODUCTOS
 =========================== */
+
 function renderProductos() {
-  const contenedor = document.getElementById('lista-productos');
-  const infoEl = document.getElementById('resultados-info');
-  if (!contenedor) return;
+    const contenedor = document.getElementById('lista-productos');
+    const infoEl = document.getElementById('resultados-info');
 
-  const textoBusqueda = (document.getElementById('buscador') ? document.getElementById('buscador').value : '').toLowerCase();
-  contenedor.innerHTML = '';
+    if (!contenedor) return;
 
-  const filtrados = productos.filter(function(p) {
-    const coincideCategoria = categoriaActual === 'Todos' || p.categoria === categoriaActual;
-    const coincideBusqueda = p.nombre.toLowerCase().includes(textoBusqueda);
-    return coincideCategoria && coincideBusqueda;
-  });
+    const buscador = document.getElementById('buscador');
+    const consulta = buscador ? buscador.value.trim() : '';
 
-  if (infoEl) {
-    infoEl.textContent = filtrados.length + ' producto' + (filtrados.length !== 1 ? 's' : '') + ' encontrado' + (filtrados.length !== 1 ? 's' : '');
-  }
+    contenedor.innerHTML = '';
 
-  filtrados.forEach(function(p) {
-    const precioBase = obtenerPrecio(p, 1);
-    const precioMay = p.precios.length > 1 ? p.precios[p.precios.length - 1] : null;
-    const agotado = p.stock !== undefined && p.stock !== null && p.stock <= 0;
+    const filtrados = consulta
+        ? buscarProductos(consulta)
+        : productos.filter(p =>
+            categoriaActual === 'Todos' ||
+            p.categoria === categoriaActual
+        );
 
-    const card = document.createElement('div');
-    card.className = 'product-card';
-    if (agotado) card.dataset.agotado = '1';
-    card.innerHTML =
-      '<div class="product-img-wrap">' +
-        (agotado ? '<div class="olibu-agotado-badge">AGOTADO</div>' : (precioMay ? '<span class="mayorista-tag">Mayorista</span>' : '')) +
-        '<img src="' + p.imagen + '" alt="' + p.nombre + '" loading="lazy" style="' + (agotado ? 'filter:grayscale(45%) opacity(0.8)' : '') + '">' +
-      '</div>' +
-      '<div class="product-info">' +
-        '<p class="product-cat">' + p.categoria + '</p>' +
-        '<p class="product-name">' + p.nombre + '</p>' +
-        '<div class="product-price-row">' +
-          '<span class="price-main">S/ ' + precioBase.toFixed(2) + '</span>' +
-          (precioMay ? '<span class="price-may">Desde ' + precioMay.min + ' und.<strong>S/ ' + precioMay.precio.toFixed(2) + '</strong></span>' : '') +
-        '</div>' +
-        '<button class="btn-agregar"' + (agotado ? ' disabled style="opacity:.45;cursor:not-allowed;"' : '') + '>' +
-          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14"><path d="M12 5v14M5 12h14"/></svg>' +
-          (agotado ? 'Agotado' : 'Agregar al carrito') +
-        '</button>' +
-      '</div>';
+    if (infoEl) {
+        infoEl.textContent =
+            filtrados.length + ' producto' +
+            (filtrados.length !== 1 ? 's' : '') +
+            ' encontrado' +
+            (filtrados.length !== 1 ? 's' : '');
+    }
 
-    card.querySelector('.product-img-wrap').addEventListener('click', function() { abrirModal(p.id); });
-    card.querySelector('.product-name').addEventListener('click', function() { abrirModal(p.id); });
-    card.querySelector('.btn-agregar').addEventListener('click', function(e) {
-      e.stopPropagation();
-      agregarCarrito(p.id, 1);
+    if (filtrados.length === 0) {
+        const mensaje = document.createElement('p');
+        mensaje.className = 'buscador-resultados-vacios';
+        mensaje.textContent =
+            'No encontramos productos con esa búsqueda. Intenta con otras palabras.';
+
+        contenedor.appendChild(mensaje);
+        return;
+    }
+
+    filtrados.forEach(function(p) {
+        const precioBase = obtenerPrecio(p, 1);
+        const precioMay = p.precios.length > 1
+            ? p.precios[p.precios.length - 1]
+            : null;
+
+        const agotado = p.stock !== undefined &&
+            p.stock !== null &&
+            p.stock <= 0;
+
+        const card = document.createElement('div');
+        card.className = 'product-card';
+
+        if (agotado) card.dataset.agotado = '1';
+
+        card.innerHTML =
+            '<div class="product-img-wrap">' +
+                (agotado
+                    ? '<div class="olibu-agotado-badge">AGOTADO</div>'
+                    : (precioMay
+                        ? '<span class="mayorista-tag">Mayorista</span>'
+                        : '')
+                ) +
+                '<img src="' + p.imagen + '" alt="' + p.nombre +
+                '" loading="lazy" style="' +
+                (agotado ? 'filter:grayscale(45%) opacity(0.8)' : '') +
+                '">' +
+            '</div>' +
+            '<div class="product-info">' +
+                '<p class="product-cat">' + p.categoria + '</p>' +
+                '<p class="product-name">' + p.nombre + '</p>' +
+                '<div class="product-price-row">' +
+                    '<span class="price-main">S/ ' +
+                    precioBase.toFixed(2) + '</span>' +
+                    (precioMay
+                        ? '<span class="price-may">Desde ' +
+                          precioMay.min + ' und.<strong>S/ ' +
+                          precioMay.precio.toFixed(2) +
+                          '</strong></span>'
+                        : ''
+                    ) +
+                '</div>' +
+                '<button class="btn-agregar"' +
+                    (agotado
+                        ? ' disabled style="opacity:.45;cursor:not-allowed;"'
+                        : ''
+                    ) +
+                '>' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="14">' +
+                        '<path d="M12 5v14M5 12h14"/>' +
+                    '</svg>' +
+                    (agotado ? 'Agotado' : 'Agregar al carrito') +
+                '</button>' +
+            '</div>';
+
+        card.querySelector('.product-img-wrap')
+            .addEventListener('click', function() {
+                abrirModal(p.id);
+            });
+
+        card.querySelector('.product-name')
+            .addEventListener('click', function() {
+                abrirModal(p.id);
+            });
+
+        card.querySelector('.btn-agregar')
+            .addEventListener('click', function(e) {
+                e.stopPropagation();
+                agregarCarrito(p.id, 1);
+            });
+
+        contenedor.appendChild(card);
+        animarCardEntrada(card);
     });
-
-    contenedor.appendChild(card);
-    animarCardEntrada(card);
-  });
 }
+
 
 /* ===========================
    MODAL PRODUCTO
@@ -473,27 +739,49 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // Buscador
+ 
+  // Buscador inteligente
   const buscador = document.getElementById('buscador');
+
   if (buscador) {
-    buscador.addEventListener('input', renderProductos);
+    // Actualizar productos y sugerencias mientras escribe
+    buscador.addEventListener('input', function() {
+      renderProductos();
+      mostrarSugerencias();
+    });
+
+    // Mostrar sugerencias al seleccionar el buscador
+    buscador.addEventListener('focus', function() {
+      mostrarSugerencias();
+    });
+
+    // Cerrar sugerencias al presionar Escape
+    buscador.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        ocultarSugerencias();
+      }
+
+      // Ejecutar búsqueda al presionar Enter
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        ocultarSugerencias();
+        renderProductos();
+      }
+    });
   }
 
-  // Botón pagar Culqi
+  // Cerrar sugerencias al hacer clic fuera del buscador
   document.addEventListener('click', function(e) {
-    if (e.target && e.target.id === 'btn-pagar') {
-      if (totalCarrito <= 0) {
-        mostrarToast('El carrito está vacío');
-        return;
-      }
-      if (typeof Culqi === 'undefined') {
-        mostrarToast('Culqi no está disponible');
-        return;
-      }
-      const culqi = new Culqi({ publicKey: 'TU_PUBLIC_KEY_AQUI' });
-      culqi.settings({ title: 'Olibu', currency: 'PEN', amount: Math.round(totalCarrito * 100) });
-      culqi.open();
+    const wrapper = document.getElementById('buscador-wrapper');
+
+    if (
+      wrapper &&
+      !wrapper.contains(e.target)
+    ) {
+      ocultarSugerencias();
     }
   });
+
 
   // Animaciones scroll general (las .product-card se agregan a este
   // observer dentro de renderProductos, porque ahora se crean después
