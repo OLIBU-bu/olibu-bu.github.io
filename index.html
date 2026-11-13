@@ -111,35 +111,23 @@
     </div>
   </section>
 
-  <section class="promo-slider-section" id="promociones">
+  <section class="promo-slider-section" id="promociones" hidden>
     <div class="promo-slider-header">
       <div class="promo-header-line"></div>
       <span class="promo-header-label">Promociones exclusivas</span>
       <div class="promo-header-line"></div>
     </div>
     <div class="promo-stack-wrapper">
-      <div class="promo-stack" id="promoStack">
-        <div class="promo-card" data-index="4"><img src="img/promocion1.png" alt="Promoción 5" draggable="false"><div class="promo-card-shine"></div></div>
-        <div class="promo-card" data-index="3"><img src="img/promocion2.png" alt="Promoción 4" draggable="false"><div class="promo-card-shine"></div></div>
-        <div class="promo-card" data-index="2"><img src="img/promocion3.png" alt="Promoción 3" draggable="false"><div class="promo-card-shine"></div></div>
-        <div class="promo-card" data-index="1"><img src="img/promocion4.png" alt="Promoción 2" draggable="false"><div class="promo-card-shine"></div></div>
-        <div class="promo-card promo-card--active" data-index="0"><img src="img/promocion5.png" alt="Promoción 1" draggable="false"><div class="promo-card-shine"></div></div>
-      </div>
+      <div class="promo-stack" id="promoStack" aria-live="polite"></div>
       <div class="promo-controls">
         <button class="promo-btn promo-btn--prev" id="promoPrev" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
-        <div class="promo-dots" id="promoDots">
-          <button class="promo-dot promo-dot--active" data-slide="0" aria-label="Promoción 1"></button>
-          <button class="promo-dot" data-slide="1" aria-label="Promoción 2"></button>
-          <button class="promo-dot" data-slide="2" aria-label="Promoción 3"></button>
-          <button class="promo-dot" data-slide="3" aria-label="Promoción 4"></button>
-          <button class="promo-dot" data-slide="4" aria-label="Promoción 5"></button>
-        </div>
+        <div class="promo-dots" id="promoDots"></div>
         <button class="promo-btn promo-btn--next" id="promoNext" aria-label="Siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
       </div>
       <div class="promo-counter">
         <span id="promoCurrentNum">01</span>
         <div class="promo-counter-bar"><div class="promo-counter-fill" id="promoFill"></div></div>
-        <span>05</span>
+        <span id="promoTotalNum">01</span>
       </div>
     </div>
   </section>
@@ -428,38 +416,137 @@
   <script src="https://checkout.culqi.com/js/v4"></script>
   <script src="script.js"></script>
 
-  <!-- PROMO SLIDER -->
+  <!-- PROMO SLIDER DINÁMICO DESDE SUPABASE -->
   <script>
-  (function() {
-    const TOTAL = 5, AUTO_INTERVAL = 4200;
-    let isAnimating = false, autoTimer = null;
+  (function () {
+    'use strict';
+    const SB_URL = 'https://izwssilqdzuyztiekzej.supabase.co';
+    const SB_KEY = '';
+    const section = document.getElementById('promociones');
     const stack = document.getElementById('promoStack');
-    const cards = Array.from(stack.querySelectorAll('.promo-card'));
-    const dots = Array.from(document.querySelectorAll('.promo-dot'));
+    const dotsBox = document.getElementById('promoDots');
+    const prev = document.getElementById('promoPrev');
+    const next = document.getElementById('promoNext');
     const fill = document.getElementById('promoFill');
-    const currentNum = document.getElementById('promoCurrentNum');
-    let order = [0,1,2,3,4];
-    function applyStackPositions() { order.forEach(function(ci,sp){ var c=cards[ci]; c.setAttribute('data-index',sp); c.classList.toggle('promo-card--active',sp===0); c.style.zIndex=TOTAL-sp; }); }
-    function updateUI() { var f=order[0]; dots.forEach(function(d,i){ d.classList.toggle('promo-dot--active',i===f); }); fill.style.width=((f+1)/TOTAL*100)+'%'; currentNum.textContent=String(f+1).padStart(2,'0'); }
-    function goNext() { if(isAnimating)return; isAnimating=true; var e=cards[order[0]]; e.classList.add('promo-card--exit'); setTimeout(function(){ e.classList.remove('promo-card--exit'); order.push(order.shift()); applyStackPositions(); updateUI(); isAnimating=false; },520); }
-    function goPrev() { if(isAnimating)return; isAnimating=true; var en=cards[order[TOTAL-1]]; en.style.transition='none'; en.style.transform='translateX(110%) scale(0.9) rotate(6deg)'; en.style.opacity='0'; requestAnimationFrame(function(){ requestAnimationFrame(function(){ order.unshift(order.pop()); applyStackPositions(); updateUI(); requestAnimationFrame(function(){ en.style.transition=''; en.style.transform=''; en.style.opacity=''; setTimeout(function(){ isAnimating=false; },650); }); }); }); }
-    applyStackPositions(); updateUI();
-    document.getElementById('promoNext').addEventListener('click',function(){ resetAuto(); goNext(); });
-    document.getElementById('promoPrev').addEventListener('click',function(){ resetAuto(); goPrev(); });
-    dots.forEach(function(dot,i){ dot.addEventListener('click',function(){ if(isAnimating||order[0]===i)return; resetAuto(); var sf=order.indexOf(i),sb=TOTAL-sf; if(sf<=sb){ var c=0; (function sn(){ if(c>=sf)return; c++; goNext(); setTimeout(sn,580); })(); } else { var c2=0; (function sp2(){ if(c2>=sb)return; c2++; goPrev(); setTimeout(sp2,700); })(); } }); });
-    var startX=0,isDragging=false;
-    stack.addEventListener('mousedown',function(e){ startX=e.clientX; isDragging=true; });
-    stack.addEventListener('mousemove',function(e){ if(!isDragging)return; var dx=e.clientX-startX,fr=cards[order[0]]; fr.style.transition='none'; fr.style.transform='translateY(0) scale(1) rotate('+(dx*0.018)+'deg) translateX('+(dx*0.08)+'px)'; });
-    stack.addEventListener('mouseup',function(e){ if(!isDragging)return; isDragging=false; var dx=e.clientX-startX,fr=cards[order[0]]; fr.style.transition=''; fr.style.transform=''; if(Math.abs(dx)>65){ resetAuto(); dx<0?goNext():goPrev(); } });
-    stack.addEventListener('mouseleave',function(){ if(isDragging){ isDragging=false; var fr=cards[order[0]]; fr.style.transition=''; fr.style.transform=''; } });
-    var tX=0;
-    stack.addEventListener('touchstart',function(e){ tX=e.touches[0].clientX; },{passive:true});
-    stack.addEventListener('touchend',function(e){ var dx=e.changedTouches[0].clientX-tX; if(Math.abs(dx)>50){ resetAuto(); dx<0?goNext():goPrev(); } },{passive:true});
-    function startAuto(){ autoTimer=setInterval(goNext,AUTO_INTERVAL); }
-    function resetAuto(){ clearInterval(autoTimer); startAuto(); }
-    stack.addEventListener('mouseenter',function(){ clearInterval(autoTimer); });
-    stack.addEventListener('mouseleave',function(){ if(!isDragging)startAuto(); });
-    startAuto();
+    const current = document.getElementById('promoCurrentNum');
+    const total = document.getElementById('promoTotalNum');
+    if (!section || !stack) return;
+
+    let promos = [];
+    let activeIndex = 0;
+    let timer = null;
+    let animating = false;
+    let paused = false;
+    let touchX = 0;
+
+    function headers() {
+      return { apikey: SB_KEY, Authorization: 'Bearer ' + SB_KEY };
+    }
+    function stopTimer() {
+      if (timer) clearTimeout(timer);
+      timer = null;
+    }
+    function getDuration() {
+      const seconds = Number(promos[activeIndex]?.duracion_segundos || 5);
+      return Math.min(60, Math.max(1, seconds)) * 1000;
+    }
+    function updateCounter() {
+      if (current) current.textContent = String(activeIndex + 1).padStart(2, '0');
+      if (total) total.textContent = String(promos.length).padStart(2, '0');
+      if (fill) fill.style.width = ((activeIndex + 1) / Math.max(promos.length, 1) * 100) + '%';
+      Array.from(dotsBox.children).forEach((dot, i) => {
+        dot.classList.toggle('promo-dot--active', i === activeIndex);
+        dot.setAttribute('aria-current', i === activeIndex ? 'true' : 'false');
+      });
+      Array.from(stack.children).forEach((card, i) => {
+        const pos = (i - activeIndex + promos.length) % promos.length;
+        card.dataset.index = String(Math.min(pos, 4));
+        card.classList.toggle('promo-card--active', i === activeIndex);
+        card.style.zIndex = String(promos.length - pos);
+      });
+    }
+    function schedule() {
+      stopTimer();
+      if (paused || promos.length < 2) return;
+      timer = setTimeout(() => show((activeIndex + 1) % promos.length), getDuration());
+    }
+    function show(index, userAction) {
+      if (!promos.length || animating) return;
+      activeIndex = (index + promos.length) % promos.length;
+      updateCounter();
+      schedule();
+    }
+    function render() {
+      stopTimer();
+      stack.innerHTML = '';
+      dotsBox.innerHTML = '';
+      if (!promos.length) {
+        section.hidden = true;
+        return;
+      }
+      section.hidden = false;
+      promos.forEach((promo, i) => {
+        const card = document.createElement('div');
+        card.className = 'promo-card';
+        const img = document.createElement('img');
+        img.src = promo.imagen_url;
+        img.alt = promo.titulo || ('Promoción ' + (i + 1));
+        img.draggable = false;
+        card.appendChild(img);
+        const shine = document.createElement('div');
+        shine.className = 'promo-card-shine';
+        card.appendChild(shine);
+        if (promo.enlace) {
+          const link = document.createElement('a');
+          link.href = promo.enlace;
+          link.target = '_blank';
+          link.rel = 'noopener noreferrer';
+          link.setAttribute('aria-label', 'Ver ' + (promo.titulo || 'promoción'));
+          link.style.cssText = 'position:absolute;inset:0;z-index:3;';
+          card.appendChild(link);
+        }
+        stack.appendChild(card);
+
+        const dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'promo-dot';
+        dot.setAttribute('aria-label', 'Ver promoción ' + (i + 1));
+        dot.addEventListener('click', () => show(i, true));
+        dotsBox.appendChild(dot);
+      });
+      activeIndex = 0;
+      updateCounter();
+      schedule();
+    }
+    async function loadPromos() {
+      try {
+        const response = await fetch(
+          SB_URL + '/rest/v1/promociones?select=id,titulo,imagen_url,enlace,orden,activo,duracion_segundos&activo=eq.true&order=orden.asc,creado_en.asc',
+          { headers: headers(), cache: 'no-store' }
+        );
+        if (!response.ok) throw new Error('HTTP ' + response.status);
+        promos = await response.json();
+        if (!Array.isArray(promos)) promos = [];
+        render();
+      } catch (error) {
+        console.error('OLIBU promociones:', error);
+        promos = [];
+        render();
+      }
+    }
+
+    if (prev) prev.addEventListener('click', () => show(activeIndex - 1, true));
+    if (next) next.addEventListener('click', () => show(activeIndex + 1, true));
+    stack.addEventListener('mouseenter', () => { paused = true; stopTimer(); });
+    stack.addEventListener('mouseleave', () => { paused = false; schedule(); });
+    stack.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
+    stack.addEventListener('touchend', e => {
+      const dx = e.changedTouches[0].clientX - touchX;
+      if (Math.abs(dx) > 50) show(activeIndex + (dx < 0 ? 1 : -1), true);
+    }, { passive: true });
+
+    loadPromos();
+    setInterval(loadPromos, 60000);
   })();
   </script>
 
